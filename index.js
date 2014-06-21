@@ -104,6 +104,9 @@ Signup.prototype.postSignup = function(req, res, next) {
     error = 'Email is invalid';
   }
 
+  name = name.toLowerCase();
+  email = email.toLowerCase();
+
   // custom or built-in view
   var errorView = config.signup.views.signup || join('get-signup');
 
@@ -239,6 +242,7 @@ Signup.prototype.postSignupResend = function(req, res, next) {
   if (!email || !email.match(EMAIL_REGEXP)) {
     error = 'Email is invalid';
   }
+  email.toLowerCase();
 
   if (error) {
     // send only JSON when REST is active
