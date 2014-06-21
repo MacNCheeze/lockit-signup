@@ -151,21 +151,18 @@ Signup.prototype.postSignup = function(req, res, next) {
       var successView = config.signup.views.signedUp || join('post-signup');
 
       if (user) {
-        // send already registered email
-        var mail = new Mail(config);
-        mail.taken(user.name, user.email, function(err, result) {
-          if (err) return next(err);
+      error = 'E-mail already registered.  Please click on forgot password.';
+      // send only JSON when REST is active
+      if (config.rest) return res.json(403, {error: error});
 
-          // send only JSON when REST is active
-          if (config.rest) return res.send(204);
-
-          res.render(successView, {
-            title: 'Sign up - Email sent',
-            basedir: req.app.get('views')
-          });
-        });
-
-        return;
+      // render template with error message
+      res.status(403);
+      res.render(errorView, {
+        title: 'Sign up',
+        error: error,
+        basedir: req.app.get('views')
+      });
+      return;
       }
 
       // looks like everything is fine
